@@ -65,14 +65,14 @@ export class YoutubeTranscriptNode implements INodeType {
 					}
 				}
         const transcript = await YoutubeTranscript.fetchTranscript(youtubeId);
-        const text = transcript.map(line => line.text).join(' ');
+
         returnData.push({
-          json: {
-            youtubeId,
-            text,
-          },
-          pairedItem: { item: itemIndex },
-        });
+					json: {
+						youtubeId,
+						transcript,
+					},
+					pairedItem: { item: itemIndex },
+				});
       } catch (error) {
         if (this.continueOnFail()) {
           returnData.push({
