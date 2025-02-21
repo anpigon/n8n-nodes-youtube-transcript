@@ -1,5 +1,5 @@
 import { URL } from 'node:url';
-import type {
+import {
   IExecuteFunctions,
   INodeExecutionData,
   INodeType,
@@ -20,7 +20,9 @@ export class YoutubeTranscriptNode implements INodeType {
     defaults: {
       name: 'Youtube Transcript',
     },
+    // @ts-ignore
     inputs: ['main'],
+    // @ts-ignore
     outputs: ['main'],
     properties: [
       {

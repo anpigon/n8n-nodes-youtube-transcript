@@ -1,6 +1,6 @@
 {
-	"compilerOptions": {
-		"strict": true,
+"compilerOptions": {
+"strict": false,
 		"module": "commonjs",
 		"moduleResolution": "node",
 		"target": "es2019",
@@ -22,7 +22,6 @@
 		"outDir": "./dist/",
 	},
 	"include": [
-		"credentials/**/*",
 		"nodes/**/*",
 		"nodes/**/*.json",
 		"package.json",
