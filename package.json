@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/anpigon/n8n-nodes-youtube-transcript.git"
+    "url": "git+https://github.com/anpigon/n8n-nodes-youtube-transcript.git"
   },
   "main": "index.js",
   "engines": {
