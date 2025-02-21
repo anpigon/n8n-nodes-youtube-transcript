@@ -29,9 +29,9 @@
 		"build": "tsc && gulp build:icons",
 		"dev": "tsc --watch",
 		"format": "prettier nodes credentials --write",
-		"lint": "eslint nodes credentials package.json",
-		"lintfix": "eslint nodes credentials package.json --fix",
-		"prepublishOnly": "pnpm build && pnpm lint -c .eslintrc.prepublish.js nodes credentials package.json"
+		"lint": "eslint nodes package.json",
+		"lintfix": "eslint nodes package.json --fix",
+		"prepublishOnly": "pnpm build && pnpm lint -c .eslintrc.prepublish.js nodes package.json"
 	},
 	"files": [
 		"dist"
@@ -55,9 +55,9 @@
 		"prettier": "^3.3.2",
 		"typescript": "^5.5.3"
 	},
-  "peerDependencies": {
-    "n8n-workflow": "*"
-  },
+	"peerDependencies": {
+		"n8n-workflow": "*"
+	},
 	"dependencies": {
 		"youtube-transcript": "^1.2.1"
 	}
