@@ -11,7 +11,7 @@ import { YoutubeTranscript } from 'youtube-transcript';
 export class YoutubeTranscriptNode implements INodeType {
   description: INodeTypeDescription = {
     displayName: 'Youtube Transcript',
-    name: 'youtubeTranscriptNode',
+    name: 'anpigonYoutubeTranscriptNode',
     // eslint-disable-next-line n8n-nodes-base/node-class-description-icon-not-svg
     icon: 'file:youTube.png',
     group: ['transform'],
