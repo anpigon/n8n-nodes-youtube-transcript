@@ -36,61 +36,40 @@ export class YoutubeTranscriptNode implements INodeType {
   };
 
   async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
-    const getTranscriptFromYoutube = async (youtubeId: string) => {
-      try {
-        const url = `https://www.youtube.com/watch?v=${youtubeId}`;
-        const transcript = await YoutubeTranscript.fetchTranscript(url);
-
-        return transcript;
-      } catch (error) {
-        if (error instanceof ApplicationError) throw error;
-        throw new ApplicationError(`Failed to extract transcript: ${error.message}`);
-      }
-    };
-
     const items = this.getInputData();
     const returnData: INodeExecutionData[] = [];
 
-    let youtubeId: string;
-
     for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
       try {
-        youtubeId = this.getNodeParameter('youtubeId', itemIndex, '') as string;
+        let youtubeId = this.getNodeParameter('youtubeId', itemIndex, '') as string;
 
-        const urlRegex = /^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/;
+				if (/^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/.test(youtubeId)) {
+					try {
+						const url = new URL(youtubeId);
 
-        if (urlRegex.test(youtubeId)) {
-          try {
-            const url = new URL(youtubeId);
-
-            if (url.hostname === 'youtu.be') {
-              youtubeId = url.pathname.slice(1); // Extract the video ID from the path
-            } else {
-              const v = url.searchParams.get('v');
-              if (!v) {
-                throw new ApplicationError(
-                  `The provided URL doesn't contain a valid YouTube video identifier. URL: ${youtubeId}`,
-                );
-              }
-              youtubeId = v;
-            }
-          } catch (error) {
-            throw new ApplicationError(
-              `Invalid YouTube URL format. Please provide a valid URL or video ID.`,
-            );
-          }
-        }
-
-        const transcript = await getTranscriptFromYoutube(youtubeId);
-
-        let text = '';
-        for (const line of transcript) {
-          text = `${text}${line.text} `;
-        }
+						if (url.hostname === 'youtu.be') {
+							youtubeId = url.pathname.slice(1); // Extract the video ID from the path
+						} else {
+							const v = url.searchParams.get('v');
+							if (!v) {
+								throw new ApplicationError(
+									`The provided URL doesn't contain a valid YouTube video identifier. URL: ${youtubeId}`,
+								);
+							}
+							youtubeId = v;
+						}
+					} catch (error) {
+						throw new ApplicationError(
+							'Invalid YouTube URL format. Please provide a valid URL or video ID.',
+						);
+					}
+				}
+        const transcript = await YoutubeTranscript.fetchTranscript(youtubeId);
+        const text = transcript.map(line => line.text).join(' ');
         returnData.push({
           json: {
-            youtubeId: youtubeId,
-            text: text,
+            youtubeId,
+            text,
           },
           pairedItem: { item: itemIndex },
         });

@@ -29,22 +29,22 @@ describe('YoutubeTranscriptNode', () => {
 
   describe('execute', () => {
     const testCases = [
-      {
-        name: 'should extract transcript with video ID',
-        input: 'K5hLY0mytV0',
-        expected: 'K5hLY0mytV0',
-      },
-      {
-        name: 'should extract transcript with full YouTube URL',
-        input: 'https://www.youtube.com/watch?v=K5hLY0mytV0',
-        expected: 'K5hLY0mytV0',
-      },
-      {
-        name: 'should extract transcript with shortened URL',
-        input: 'https://youtu.be/K5hLY0mytV0?feature=shared',
-        expected: 'K5hLY0mytV0',
-      },
-    ];
+			{
+				name: 'should extract transcript with video ID',
+				input: 'K5hLY0mytV0',
+				expected: 'K5hLY0mytV0',
+			},
+			{
+				name: 'should extract transcript with full YouTube URL',
+				input: 'https://www.youtube.com/watch?v=K5hLY0mytV0',
+				expected: 'K5hLY0mytV0',
+			},
+			{
+				name: 'should extract transcript with shortened URL',
+				input: 'https://youtu.be/K5hLY0mytV0?feature=shared',
+				expected: 'K5hLY0mytV0',
+			},
+		];
 
     for (const { name, input, expected } of testCases) {
       it(name, async () => {
@@ -56,7 +56,7 @@ describe('YoutubeTranscriptNode', () => {
         expect(result[0]).toHaveLength(1);
         expect(result[0][0].json).toEqual({
           youtubeId: expected,
-          text: 'Test transcript 1 Test transcript 2 ',
+          text: 'Test transcript 1 Test transcript 2',
         });
       });
     }
@@ -78,8 +78,8 @@ describe('YoutubeTranscriptNode', () => {
       jest.spyOn(executeFunctions, 'getNodeParameter').mockReturnValue('K5hLY0mytV0');
 
       await expect(async () => {
-        await node.execute.call(executeFunctions);
-      }).rejects.toThrow('Failed to extract transcript: Failed to fetch transcript');
+				await node.execute.call(executeFunctions);
+			}).rejects.toThrow('Failed to fetch transcript');
     });
   });
 });
