@@ -1,3 +1,4 @@
+import { URL } from 'node:url';
 import {
 	ApplicationError,
 	IExecuteFunctions,
@@ -5,6 +6,7 @@ import {
 	INodeType,
 	INodeTypeDescription,
 	NodeOperationError,
+	NodeConnectionType,
 } from 'n8n-workflow';
 import { YoutubeTranscript } from 'youtube-transcript';
 
@@ -20,8 +22,8 @@ export class YoutubeTranscriptNode implements INodeType {
 		defaults: {
 			name: 'Youtube Transcript',
 		},
-		inputs: ['main'],
-		outputs: ['main'],
+inputs: [NodeConnectionType.Main],
+outputs: [NodeConnectionType.Main],
 		properties: [
 			{
 				displayName: 'Youtube Video ID or Url',
@@ -34,18 +36,15 @@ export class YoutubeTranscriptNode implements INodeType {
 	};
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
-		const getTranscriptFromYoutube = async function (youtubeId: string) {
+		const getTranscriptFromYoutube = async (youtubeId: string) => {
 			try {
 				const url = `https://www.youtube.com/watch?v=${youtubeId}`;
 				const transcript = await YoutubeTranscript.fetchTranscript(url);
 
 				return transcript;
 			} catch (error) {
-				if (error instanceof ApplicationError) {
-					throw error;
-				} else {
-					throw new ApplicationError(`Failed to extract transcript: ${error.message}`);
-				}
+if (error instanceof ApplicationError) throw error;
+throw new ApplicationError(`Failed to extract transcript: ${error.message}`);
 			}
 		};
 
@@ -61,7 +60,7 @@ export class YoutubeTranscriptNode implements INodeType {
 				const urlRegex = /^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/;
 
 				if (urlRegex.test(youtubeId)) {
-					const url = new URL(youtubeId);
+					const url = new URL(youtubeId, '');
 
 					if (url.hostname === 'youtu.be') {
 						youtubeId = url.pathname.slice(1); // Extract the video ID from the path
@@ -80,7 +79,7 @@ export class YoutubeTranscriptNode implements INodeType {
 
 				let text = '';
 				for (const line of transcript) {
-					text += line + ' ';
+					text += `${line} `;
 				}
 				returnData.push({
 					json: {
