@@ -1,5 +1,5 @@
 {
-	"name": "n8n-nodes-youtube-transcript",
+  "name": "@anpigon/n8n-nodes-youtube-transcript",
 	"version": "0.1.0",
 	"description": "download transcript of youtube videos in your n8n workflows",
 	"keywords": [
