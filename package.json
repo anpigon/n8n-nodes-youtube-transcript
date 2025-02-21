@@ -12,12 +12,12 @@
 	"license": "MIT",
 	"homepage": "",
 	"author": {
-		"name": "Franz Haberfellner",
-		"email": "haf68k@gmail.com"
+		"name": "anpigon",
+		"email": "markan82@gmail.com"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/hapheus/n8n-nodes-youtube-transcript.git"
+		"url": "https://github.com/anpigon/n8n-nodes-youtube-transcript.git"
 	},
 	"main": "index.js",
 	"engines": {
@@ -55,6 +55,9 @@
 		"prettier": "^3.3.2",
 		"typescript": "^5.5.3"
 	},
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  },
 	"dependencies": {
 		"youtube-transcript": "^1.2.1"
 	}
