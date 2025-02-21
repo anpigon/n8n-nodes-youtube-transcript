@@ -15,7 +15,7 @@ export class YoutubeTranscriptNode implements INodeType {
     // eslint-disable-next-line n8n-nodes-base/node-class-description-icon-not-svg
     icon: 'file:youTube.png',
     group: ['transform'],
-    version: 1,
+    version: 2,
     description: 'Get Transcript of a youtube video',
     defaults: {
       name: 'Youtube Transcript',
