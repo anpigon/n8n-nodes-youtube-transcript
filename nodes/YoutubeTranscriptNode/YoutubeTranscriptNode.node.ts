@@ -1,5 +1,5 @@
 import { URL } from 'node:url';
-import {
+import type {
   IExecuteFunctions,
   INodeExecutionData,
   INodeType,
@@ -60,18 +60,24 @@ export class YoutubeTranscriptNode implements INodeType {
         const urlRegex = /^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/;
 
         if (urlRegex.test(youtubeId)) {
-          const url = new URL(youtubeId, '');
+          try {
+            const url = new URL(youtubeId);
 
-          if (url.hostname === 'youtu.be') {
-            youtubeId = url.pathname.slice(1); // Extract the video ID from the path
-          } else {
-            const v = url.searchParams.get('v');
-            if (!v) {
-              throw new ApplicationError(
-                `The provided URL doesn't contain a valid YouTube video identifier. URL: ${youtubeId}`,
-              );
+            if (url.hostname === 'youtu.be') {
+              youtubeId = url.pathname.slice(1); // Extract the video ID from the path
+            } else {
+              const v = url.searchParams.get('v');
+              if (!v) {
+                throw new ApplicationError(
+                  `The provided URL doesn't contain a valid YouTube video identifier. URL: ${youtubeId}`,
+                );
+              }
+              youtubeId = v;
             }
-            youtubeId = v;
+          } catch (error) {
+            throw new ApplicationError(
+              `Invalid YouTube URL format. Please provide a valid URL or video ID.`,
+            );
           }
         }
 
@@ -79,7 +85,7 @@ export class YoutubeTranscriptNode implements INodeType {
 
         let text = '';
         for (const line of transcript) {
-          text += `${line} `;
+          text = `${text}${line.text} `;
         }
         returnData.push({
           json: {
@@ -90,15 +96,14 @@ export class YoutubeTranscriptNode implements INodeType {
         });
       } catch (error) {
         if (this.continueOnFail()) {
-          items.push({ json: this.getInputData(itemIndex)[0].json, error, pairedItem: itemIndex });
-        } else {
-          if (error.context) {
-            error.context.itemIndex = itemIndex;
-            throw error;
-          }
-          throw new NodeOperationError(this.getNode(), error, {
-            itemIndex,
+          returnData.push({
+            json: {
+              error: error instanceof Error ? error.message : String(error),
+            },
+            pairedItem: { item: itemIndex },
           });
+        } else {
+          throw new NodeOperationError(this.getNode(), error);
         }
       }
     }
