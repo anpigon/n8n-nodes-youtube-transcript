@@ -9,39 +9,39 @@ import { ApplicationError, NodeOperationError } from 'n8n-workflow';
 import { YoutubeTranscript } from 'youtube-transcript';
 
 export class YoutubeTranscriptNode implements INodeType {
-  description: INodeTypeDescription = {
-    displayName: 'Youtube Transcript',
-    name: 'anpigonYoutubeTranscriptNode',
-    // eslint-disable-next-line n8n-nodes-base/node-class-description-icon-not-svg
-    icon: 'file:youTube.png',
-    group: ['transform'],
-    version: 2,
-    description: 'Get Transcript of a youtube video',
-    defaults: {
-      name: 'Youtube Transcript',
-    },
-    // @ts-ignore
-    inputs: ['main'],
-    // @ts-ignore
-    outputs: ['main'],
-    properties: [
-      {
-        displayName: 'Youtube Video ID or Url',
-        name: 'youtubeId',
-        type: 'string',
-        default: '',
-        placeholder: 'Youtube Video ID or Url',
-      },
-    ],
-  };
+	description: INodeTypeDescription = {
+		displayName: 'Free Youtube Transcript',
+		name: 'freeYoutubeTranscriptNode',
+		// eslint-disable-next-line n8n-nodes-base/node-class-description-icon-not-svg
+		icon: 'file:youTube.png',
+		group: ['transform'],
+		version: 1,
+		description: 'Get Transcript of a youtube video',
+		defaults: {
+			name: 'Free Youtube Transcript',
+		},
+		// @ts-ignore
+		inputs: ['main'],
+		// @ts-ignore
+		outputs: ['main'],
+		properties: [
+			{
+				displayName: 'Youtube Video ID or Url',
+				name: 'youtubeId',
+				type: 'string',
+				default: '',
+				placeholder: 'Youtube Video ID or Url',
+			},
+		],
+	};
 
-  async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
-    const items = this.getInputData();
-    const returnData: INodeExecutionData[] = [];
+	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
+		const items = this.getInputData();
+		const returnData: INodeExecutionData[] = [];
 
-    for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
-      try {
-        let youtubeId = this.getNodeParameter('youtubeId', itemIndex, '') as string;
+		for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
+			try {
+				let youtubeId = this.getNodeParameter('youtubeId', itemIndex, '') as string;
 
 				if (/^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/.test(youtubeId)) {
 					try {
@@ -64,29 +64,29 @@ export class YoutubeTranscriptNode implements INodeType {
 						);
 					}
 				}
-        const transcript = await YoutubeTranscript.fetchTranscript(youtubeId);
+				const transcript = await YoutubeTranscript.fetchTranscript(youtubeId);
 
-        returnData.push({
+				returnData.push({
 					json: {
 						youtubeId,
 						transcript,
 					},
 					pairedItem: { item: itemIndex },
 				});
-      } catch (error) {
-        if (this.continueOnFail()) {
-          returnData.push({
-            json: {
-              error: error instanceof Error ? error.message : String(error),
-            },
-            pairedItem: { item: itemIndex },
-          });
-        } else {
-          throw new NodeOperationError(this.getNode(), error);
-        }
-      }
-    }
+			} catch (error) {
+				if (this.continueOnFail()) {
+					returnData.push({
+						json: {
+							error: error instanceof Error ? error.message : String(error),
+						},
+						pairedItem: { item: itemIndex },
+					});
+				} else {
+					throw new NodeOperationError(this.getNode(), error);
+				}
+			}
+		}
 
-    return [returnData];
-  }
+		return [returnData];
+	}
 }
